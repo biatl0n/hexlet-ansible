@@ -1,0 +1,9 @@
+- hosts: servers
+  remote_user: vagrant
+  tasks:
+    - name: Remove git 
+      become: yes
+      ansible.builtin.dnf:
+        name: git
+        state: absent
+        autoremove: yes
