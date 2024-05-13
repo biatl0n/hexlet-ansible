@@ -1,0 +1,9 @@
+- hosts: servers
+  remote_user: vagrant
+  tasks:
+    - name: install git 
+      become: yes
+      ansible.builtin.dnf:
+        name: git
+        state: present
+        update_cache: yes
