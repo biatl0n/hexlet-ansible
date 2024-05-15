@@ -1,0 +1,31 @@
+- hosts: servers
+  remote_user: vagrant
+  tasks:
+
+    - name: install nginx
+      become: yes
+      ansible.builtin.dnf:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    - name: update nginx config
+      ansible.builtin.copy:
+        src: ./files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+      notify:
+        - restart nginx
+      become: yes
+
+    - name: Wrap host root index file
+      ansible.builtin.copy:
+        src: ./files/index.html
+        dest: /usr/share/nginx/html/index.html
+      become: yes
+
+  handlers:
+    - name: restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      become: yes
