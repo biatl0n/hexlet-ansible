@@ -1,0 +1,47 @@
+- hosts: servers
+  remote_user: vagrant
+  tasks:
+    - name: Обновление кэша пакетного менеджера
+      become: yes
+      tags: update_cache
+      ansible.builtin.dnf:
+        state: latest
+        update_cache: yes
+        
+    - name: Установка git, make, nodejs
+      become: yes
+      tags: install_soft
+      ansible.builtin.dnf:
+        name:
+          - git
+          - make
+          - nodejs
+        state: present
+        update_cache: yes
+        
+    - name: Создание пользователя arya
+      become: yes
+      tags: create_users
+      ansible.builtin.user:
+        name: arya
+        groups: wheel
+        append: yes
+        shell: /bin/sh
+
+    - name: Создание пользователя sansa
+      become: yes
+      tags: create_users
+      ansible.builtin.user:
+        name: sansa
+        groups: wheel
+        append: yes
+        shell: /bin/sh
+
+    - name: Создание пользователея tition
+      become: yes
+      tags: create_users
+      ansible.builtin.user:
+        name: tirion
+        groups: wheel
+        append: yes
+        shell: /bin/sh
