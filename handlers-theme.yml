@@ -1,4 +1,7 @@
 - hosts: servers
+  vars:
+    nginx_port: 8282
+    root_dir: /usr/share/nginx/html
   remote_user: vagrant
   tasks:
 
@@ -10,8 +13,8 @@
         update_cache: yes
 
     - name: update nginx config
-      ansible.builtin.copy:
-        src: ./files/nginx.conf
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
         dest: /etc/nginx/nginx.conf
       notify:
         - restart nginx
@@ -19,8 +22,8 @@
 
     - name: Wrap host root index file
       ansible.builtin.copy:
-        src: ./files/index.html
-        dest: /usr/share/nginx/html/index.html
+        src: files/index.html
+        dest: "{{root_dir}}/index.html"
       become: yes
 
   handlers:
