@@ -1,4 +1,5 @@
-- hosts: servers
+- hosts: webservers
+  gather_facts: no
   remote_user: vagrant
   tasks:
     - name: install git 
