@@ -1,0 +1,38 @@
+- hosts: appservers
+  vars:
+    users:
+      jaime:
+        email: j@j
+      sansa:
+        email: s@s
+      robert:
+        email: r@r
+  remote_user: vagrant
+  tasks:
+    - name: add users
+      become: yes
+      ansible.builtin.user:
+        name: "{{ item.key }}"
+        state: present
+      loop: "{{ lookup('ansible.builtin.dict', users) }}"
+      tags: add_users
+
+    - name: add gitconfig
+      become: yes
+      ansible.builtin.template:
+        src: templates/gitconfig.j2
+        dest: "/home/{{ item.key }}/.gitconfig"
+      loop: "{{ lookup('ansible.builtin.dict', users) }}"
+      tags: add_gitconfig
+
+    - name: add ssh public key to authorized_keys
+      become: yes
+      ansible.posix.authorized_key:
+        user: "{{ item.key }}"
+        state: present
+        key: "{{ lookup('file', 'files/id_ed25519.pub') }}"
+      loop: "{{ lookup('ansible.builtin.dict', users) }}"
+      tags: add_ssh_pubkey
+
+
+
