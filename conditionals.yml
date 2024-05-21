@@ -1,0 +1,42 @@
+- hosts: all
+  
+  vars:
+    users:
+      fred:
+        email: fred@ya.ru
+      tarya:
+        email: tarya@mail.ru
+
+  remote_user: vagrant
+  tasks:
+
+    - name: Install Git on CentOS
+      become: yes
+      ansible.builtin.dnf:
+        name: git
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "CentOS"
+
+    - name: Install Git on Ubuntu
+      become: yes
+      ansible.builtin.apt:
+        name: git
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: create users
+      become: yes
+      ansible.builtin.user:
+        name: "{{ item.key }}"
+        state: present
+      loop: "{{ lookup('ansible.builtin.dict', users) }}"
+
+    - name: Add gitconfig
+      become: yes
+      ansible.builtin.template:
+        src: templates/gitconfig.j2
+        dest: "/home/{{ item.key }}/.gitconfig"
+      loop: "{{ lookup('ansible.builtin.dict', users) }}"
+
