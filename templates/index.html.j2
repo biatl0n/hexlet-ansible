@@ -8,8 +8,11 @@
 </head>
 <body>
   <h1>Hello World!</h1>
-    <h2>{{ server_text|upper }}<h2>
-    <small>Deployed at: {{ deployed_date }}</small>
+    <h2>{{server_text|upper}}<h2>
+    <pre><code>
+      {{cowsay.stdout}}
+    </code></pre>
+    <small>Deployed at: {{deployed_date}}</small>
 </body>
 </html>
 
