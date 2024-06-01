@@ -7,17 +7,12 @@
   remote_user: vagrant
   tasks:
 
-    - name: Gather the package facats
-      ansible.builtin.package_facts:
-        manager: auto
-
     - name: install nginx
       become: yes
       ansible.builtin.dnf:
         name: nginx
         state: latest
         update_cache: yes
-
 
     - name: enable crb repo
       become: yes
@@ -42,11 +37,14 @@
         state: latest
         update_cache: yes
 
+    - name: Gather the package facats
+      ansible.builtin.package_facts:
+        manager: auto
+
     - name: cowsay
       ansible.builtin.shell: cowsay "This is server {{ server_name }}"
       register: cowsay
       when: "'cowsay' in ansible_facts.packages"
-
 
     - name: update nginx config
       ansible.builtin.template:

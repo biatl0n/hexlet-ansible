@@ -1,0 +1,11 @@
+- hosts: developers
+  roles:
+    - role: geerlingguy.postgresql
+      become: yes
+      vars:
+        postgresql_user_name: vagrant
+    - role: geerlingguy.git
+      become: yes
+    - role: geerlingguy.nodejs
+      become: yes
+  remote_user: vagrant
