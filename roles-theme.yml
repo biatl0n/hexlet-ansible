@@ -1,4 +1,9 @@
 - hosts: developers
+  vars:
+    user_name: biatl0n
+    user_password: duffy
+    user_shell: /bin/bash
+    user_email: biatl0n@yandex.ru
   roles:
     - role: geerlingguy.postgresql
       become: yes
@@ -7,5 +12,7 @@
     - role: geerlingguy.git
       become: yes
     - role: geerlingguy.nodejs
+      become: yes
+    - role: devEnvInit
       become: yes
   remote_user: vagrant

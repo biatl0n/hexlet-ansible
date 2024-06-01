@@ -1,0 +1,6 @@
+---
+# defaults file for devEnvInit
+user_name: user
+user_password: default
+user_email: default@default
+user_shell: /bin/sh

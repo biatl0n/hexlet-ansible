@@ -1,0 +1,9 @@
+---
+# tasks file for devEnvInit
+- ansible.builtin.user:
+    name: "{{user_name}}"
+    password: "{{user_password | password_hash('sha512') }}"
+    shell: "{{user_shell}}"
+- ansible.builtin.template:
+    src: templates/gitconfigForDevEnv.j2
+    dest: "/home/{{user_name}}/.gitconfig"
