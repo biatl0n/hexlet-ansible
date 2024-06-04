@@ -1,0 +1,52 @@
+- hosts: debianservers
+  remote_user: vagrant
+  vars:
+    user: john
+  collections:
+    - nginxinc.nginx_core
+  roles:
+    - role: geerlingguy.postgresql
+      become: yes
+  tasks:
+    - name: Install nginx
+      become: yes
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      loop:
+        - php8.1
+        - php8.1-pgsql
+        - php8.1-fpm
+        - php8.1-mbstring
+        - php8.1-oauth
+        - git
+        - mc
+        - keepassxc
+        - xrdp
+        - xfce4
+        - zsh
+      tags: [install_soft]
+
+    - name: add new user
+      become: yes
+      ansible.builtin.user:
+        name: "{{ user }}"
+        create_home: yes
+        shell: /bin/zsh
+      tags: [useradd]
+
+    - name: Update SSH keys
+      become: yes
+      ansible.posix.authorized_key:
+        user: "{{ user }}"
+        state: present
+        key: "{{ lookup('file', 'files/id_ed25519.pub') }}"
+      tags: [copy_ssh_key]
+
+    - name: Reboot System
+      become: yes
+      ansible.builtin.reboot:
+        reboot_timeout: 30
+
+
